@@ -20,9 +20,7 @@ const WeekSelector = (props) => {
             <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.weekSelectorArrowButton}
-                onPress={() => {
-
-                }}>
+                onPress={onChangeWeek}>
                 <AntDesign
                     name="caretleft"
                     size={10}
@@ -40,9 +38,7 @@ const WeekSelector = (props) => {
             <TouchableOpacity
                 activeOpacity={0.5}
                 style={styles.weekSelectorArrowButton}
-                onPress={() => {
-
-                }}>
+                onPress={onChangeWeek}>
                 <AntDesign
                     name="caretright"
                     size={10}
@@ -68,7 +64,7 @@ const styles = StyleSheet.create({
         width: 40,
         height: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     selectedWeekTitleContainer: {
         flex: 1,
