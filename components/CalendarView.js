@@ -27,7 +27,7 @@ const CalendarView = () => {
 
     useEffect(() => {
         (async () => {
-            const maxValue = await findMaxValue(WeekValues)
+            const maxValue = await findMaxValue([...WeekValues])
             const buffer = maxValue * 0.10
             setPeekValue(maxValue + buffer)
         })()
