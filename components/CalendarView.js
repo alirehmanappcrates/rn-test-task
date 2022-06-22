@@ -9,32 +9,27 @@ import {
 } from '../utils/calculatorKit'
 
 const WeekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-const WeekValues = [
-    { in_active_cal: 2230, workout_cal: 150, },
-    { in_active_cal: 3030, workout_cal: 100, },
-    { in_active_cal: 2300, workout_cal: 700, },
-    { in_active_cal: 2000, workout_cal: 150, },
-    { in_active_cal: 1950, workout_cal: 130, },
-    { in_active_cal: 3100, workout_cal: 400, },
-    { in_active_cal: 2100, workout_cal: 500, },
-]
 
 const GRAPH_HEIGHT = 300
 
-const CalendarView = () => {
+const CalendarView = (props) => {
+
+    const {
+        data = []
+    } = props
 
     const [peekValue, setPeekValue] = useState(1)
+    const graphValueSections = [peekValue, peekValue * 0.8, peekValue * 0.6, peekValue * 0.4, peekValue * 0.2]
 
     useEffect(() => {
-        (async () => {
-            const maxValue = await findMaxValue([...WeekValues])
-            const buffer = maxValue * 0.10
-            setPeekValue(maxValue + buffer)
-        })()
-        return () => { }
-    }, [])
+        getPeekValue()
+    }, [data])
 
-    const graphValueSections = [peekValue, peekValue * 0.8, peekValue * 0.6, peekValue * 0.4, peekValue * 0.2]
+    const getPeekValue = async () => {
+        const maxValue = await findMaxValue([...data])
+        const buffer = maxValue * 0.10
+        setPeekValue(maxValue + buffer)
+    }
 
     const getLineHeight = (_value) => {
         const height = GRAPH_HEIGHT * (_value / peekValue)
@@ -70,21 +65,21 @@ const CalendarView = () => {
     const renderWeekGraph = () => {
         return (
             <View style={styles.weekDaysGraphContainer}>
-                {WeekValues.map((item, index) => (
+                {data.map((item, index) => (
                     <Pressable
-                        key={`WeekValues${index}`}
+                        key={`data${index}`}
                         style={styles.weekGraphLineContainer}
                         onPress={() => {
 
                         }}>
-                        <View
+                        {/* <View
                             style={[styles.weekWorkoutGraphLine, {
-                                height: getLineHeight(item.workout_cal)
+                                height: getLineHeight(item.value)
                             }]}
-                        />
+                        /> */}
                         <View
                             style={[styles.weekInActiveGraphLine, {
-                                height: getLineHeight(item.in_active_cal)
+                                height: getLineHeight(item.value)
                             }]}
                         />
                     </Pressable>

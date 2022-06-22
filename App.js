@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
   StyleSheet,
@@ -30,7 +30,7 @@ import {
 
 const permissions = {
   permissions: {
-    read: [AppleHealthKit.Constants.Permissions.HeartRate],
+    read: [AppleHealthKit.Constants.Permissions.ActiveEnergyBurned],
     write: [AppleHealthKit.Constants.Permissions.Steps],
   },
 }
@@ -40,6 +40,11 @@ const App = () => {
 
   const [isGetRequestLoading, setIsGetReguestLoading] = useState(false)
   const [isPostRequestLoading, setIsPostReguestLoading] = useState(false)
+  const [activeEnergy, setActiveEnergy] = useState([])
+
+  useEffect(() => {
+    getHeartRateSampels()
+  }, [])
 
   const callTestPostmanGetAPI = async () => {
     try {
@@ -78,14 +83,17 @@ const App = () => {
       /* Can now read or write to HealthKit */
 
       const options = {
-        startDate: new Date(2020, 1, 1).toISOString(),
+        startDate: new Date(2021, 0, 0).toISOString(), // required
+        endDate: new Date().toISOString(), // optional; default now
       }
 
-      AppleHealthKit.getHeartRateSamples(
+      AppleHealthKit.getActiveEnergyBurned(
         options,
         (callbackError, results) => {
-          console.log("results", results)
-          Alert.alert(null, `Found ${results.length} number of resutls.`)
+          // console.log("getHeartRateSamples-results", results, callbackError)
+          if (callbackError === null) {
+            setActiveEnergy(results)
+          }
         },
       )
     })
@@ -100,7 +108,7 @@ const App = () => {
             getHeartRateSampels()
           }}
         />
-        <CalendarView />
+        <CalendarView data={activeEnergy} />
         <CalorieCard
           isLoading={isGetRequestLoading}
           cardImage={InActive}
